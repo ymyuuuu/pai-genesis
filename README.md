@@ -1,18 +1,14 @@
 # 制約は知能を生むか — 有限エネルギーの下で学習した4脚歩行の汎化
 
-Physical AI 応用編1 最終課題。Genesis 上で Unitree Go2 の歩行方策を強化学習（PPO）で学習し、
-**エネルギーが有限であるという制約が、未知環境への汎化（＝知能）を高めるか**を検証する。
-
-- 問い・仮説・設計の決定ログ: [docs/research_decisions.md](docs/research_decisions.md)
-- 結果の要約: [results/summary.md](results/summary.md)
+Physical AI 応用編1 最終課題。Genesis 上で Unitree Go2 の歩行方策を強化学習（PPO）で学習し、エネルギーが有限であるという制約が、未知環境への汎化（＝知能）を高めるかを検証する。
 
 ## 結果（要約）
-- 本実験（6条件 × 3シード）: エネルギー制約は汎化を高めなかった。未知環境の平均維持率は C0 0.56 / C1 0.56 / C2 0.51 / C3 0.50 / C4 0.44（**H1〜H3 不支持**）
+- 本実験（6条件 × 3シード）: エネルギー制約は汎化を高めなかった。未知環境の平均維持率は C0 0.56 / C1 0.56 / C2 0.51 / C3 0.50 / C4 0.44（仮説H1〜H3は不支持）
 - **頑健に再現した結果**: 有限性だけから、発熱の安い膝へ負担を移す「配分の判断」と節約が生まれた（膝のトルク²分担 0.64 → 0.83、消費電力 最大−47%）。新シードでもほぼ同じ値
 - **追加検証（事前登録）**: 3シードで見えた環境ごとの差から立てた H4（トルクの余力で汎化の向きを予測できる）を、新しい環境（重力増加・登り斜面）と新しいシード（4〜8）で検証したが**不支持**。環境ごとの差も新シードでは再現しなかった
 - **探索的な発見（未確認）**: 登り斜面では、エネルギー制約で学習した方策だけが一様に弱く、非物理量の予算（CTRL）では弱くならなかった
 
-詳細: [results/summary.md](results/summary.md)（本実験）、[results/summary_h4.md](results/summary_h4.md)（追加検証）、説明資料: [docs/report/report.pdf](docs/report/report.pdf)
+詳細: [results/summary.md](results/summary.md)（本実験）、[results/summary_h4.md](results/summary_h4.md)（追加検証）
 
 ## 仮説
 - **H1**: 適度なエネルギー制約の下で学習した方策は、制約なしの方策より未知環境での汎化性能が高い
@@ -53,7 +49,6 @@ uv sync
 ./run_h4.sh                   # 追加検証（新シード4〜8、E5 重力増加・E6 登り斜面）-> results/summary_h4.md
 ./run_h5_train.sh             # 学習のみ（確認用の新シード9〜14）。確認は行わなかったため未評価
 ```
-動画: `record_video.py`（1クリップ）と `compose_video.py`（構成）。
 
 ## ファイル
 | ファイル | 内容 |
@@ -63,11 +58,9 @@ uv sync
 | `calibrate.py` | α・基礎代謝・基準消費量の較正 |
 | `evaluate.py`, `rollout.py` | 未知環境での評価 |
 | `analyze.py` | 図と要約表 |
-| `record_video.py`, `compose_video.py` | 動画 |
 
 ## 環境
 genesis-world 1.4.5 / torch 2.15 (CUDA) / rsl-rl-lib 5.5.2 / Python 3.13 / RTX 4080 SUPER
 
-## ライセンス表記
-`energy_env.py` と `train.py` は [Genesis](https://github.com/Genesis-Embodied-AI/Genesis) の
-`examples/locomotion`（Apache-2.0）を元に改変している。
+## ライセンス
+`energy_env.py` と `train.py` は [Genesis](https://github.com/Genesis-Embodied-AI/Genesis) の`examples/locomotion`（Apache-2.0）を元に改変している。
